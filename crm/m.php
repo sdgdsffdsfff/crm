@@ -1,22 +1,22 @@
 <?php
 session_start();
 require_once 'inc/const.php';
-
 global $luo_session_name; 
 
 if (isset($_GET['act']) && addslashes($_GET['act']) == "login") login();
 if (isset($_GET['act']) && addslashes($_GET['act']) == "quit") quit();
+
 function login() {
 	global $db;
 	if($_POST['code']=="" || $_POST['code']!=$_SESSION["codeNumber"])
 	{
-	//echo "<script>alert('验证码错误');window.location.href='login.php';</script>";
-	 
+	 //echo "<script>alert('验证码错误');window.location.href='login.php';</script>";	 
 	 if (isset ( $_POST ["username"] )) {
 			$username = $_POST ["username"];
 		} else {
 			$username = "";
 		}
+
 		if (isset ( $_POST ["password"] )) {
 			$password = $_POST ["password"];
 		} else {
@@ -26,7 +26,9 @@ function login() {
 		if (empty($username)||empty($password)){
 			exit("<script>alert('用户名或密码不能为空！');window.history.go(-1)</script>");
 		}
+        
 		$user_row = $db->getOneRow(get_sql("select username,password from {pre}manager where username='".$username."' and password='".md5($password)."'"));
+		
 
 		if (!empty($user_row )) {
 			$_SESSION['username'] = $user_row ['username']; 
@@ -35,7 +37,8 @@ function login() {
 			$luo_session_name = $user_row['username'];
 			$_SESSION['supermanager'] = $user_row ['supermanager']; 
 			mysql_query(get_sql("update {pre}manager set loginip='".get_userip()."',logintime='".date ( "Y-m-d H:i:s" )."' where username='".$username."'"));
-			if("on"==$_POST["iscookie"]){//登录成功保存cookie
+			if("on"==$_POST["iscookie"]
+){//登录成功保存cookie
 				setcookie("username", $username,time()+3600*24*7);
 				setcookie("password", $password,time()+3600*24*7);
 			}else{
@@ -50,6 +53,7 @@ function login() {
 	
 	}
 } 
+
 function quit() {
 	session_unset();
 	session_destroy(); 
@@ -116,7 +120,6 @@ if (document.form1.safecode.value=="") {
 <div data-role="fieldcontain" class="ui-hide-label">
 	<label for="username">密码:</label>
 	<input type="password" name="password" id="password" value="<?php echo $_COOKIE["password"];?>" placeholder="密码"/>
-	
 </div>
 <div class="ui-block-b">
 	<select name="iscookie" id="iscookie" data-role="slider">
@@ -133,8 +136,7 @@ if (document.form1.safecode.value=="") {
 				if(document.form1.username.value!=""  && document.form1.password.value!=""){
 						document.form1.submit();
 					}
-			}
-			
+			}							
       <?php if($_GET['act'] != "quit"){echo "autologin();";}?>
      </script>
 </body>

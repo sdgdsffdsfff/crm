@@ -156,12 +156,11 @@ eval("submenu" + sid + ".style.display=\"none\";");
                   href="manager/admin_manage.php" target="mainFrame">用户管理</a></td>
                         </tr>  
                         <?php }?>
-                        <!--
                         <tr>
                           <td width="45" height="26" align="center" class="sub_table_td"><img src="images/jt.gif" width="6" height="5" /></td>
                           <td height="26" align="left" class="sub_table_td"><a href="manager/admin_mod.php?id=<?php echo $_SESSION['id'];?>" target="mainFrame">密码修改</a></td>
                         </tr> 
-                        -->
+                      
                         <tr>
                           <td width="45" height="26" align="center" class="sub_table_td"><img src="images/jt.gif" width="6" height="5" /></td>
                           <td height="26" align="left" valign="middle" class="sub_table_td"><a 

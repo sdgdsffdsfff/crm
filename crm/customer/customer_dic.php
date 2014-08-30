@@ -98,19 +98,19 @@ function onSubmit(){
     </tr>
     <tr>
       <td width="13%" height="24" align="right" valign="middle" bgcolor="#f1f1f1">代码：</td>
-      <td width="37%" height="24" align="left" valign="middle" bgcolor="#f1f1f1"><input name="code" type="text" id="code" value="<?=$vo['code']?>" size="30" /></td>
+      <td width="37%" height="24" align="left" valign="middle" bgcolor="#f1f1f1"><input name="code" type="text" id="code" value="<?php echo  $vo['code']?>" size="30" /></td>
       <td width="13%" height="24" align="right" valign="middle" bgcolor="#f1f1f1">名称：</td>
-      <td width="37%" height="24" align="left" valign="middle" bgcolor="#f1f1f1"><input name="name" type="text" id="name" value="<?=$vo['name']?>" size="30" /></td>
+      <td width="37%" height="24" align="left" valign="middle" bgcolor="#f1f1f1"><input name="name" type="text" id="name" value="<?php echo $vo['name']?>" size="30" /></td>
     </tr>
     <tr>
       <td width="13%" height="24" align="right" valign="middle" bgcolor="#f1f1f1">排序ID：</td>
-      <td width="37%" height="24" align="left" valign="middle" bgcolor="#f1f1f1"><input name="sort" type="text" id="sort" value="<?=$vo['sort']?>" size="30" /></td>
+      <td width="37%" height="24" align="left" valign="middle" bgcolor="#f1f1f1"><input name="sort" type="text" id="sort" value="<?php echo $vo['sort']?>" size="30" /></td>
       <td width="13%" height="24" align="right" valign="middle" bgcolor="#f1f1f1">备注：</td>
-      <td width="37%" height="24" align="left" valign="middle" bgcolor="#f1f1f1"><textarea name="remark" type="text" id="remark" row=5 style="width:260px"><?=$vo['remark']?></textarea></td>
+      <td width="37%" height="24" align="left" valign="middle" bgcolor="#f1f1f1"><textarea name="remark" type="text" id="remark" row=5 style="width:260px"><?php echo $vo['remark']?></textarea></td>
     </tr>
     <tr>
       <td height="24" bgcolor="#f1f1f1" colspan="4"> 
-      <input name="id" type="hidden" id="id" value="<?=$vo['id']?>"/>
+      <input name="id" type="hidden" id="id" value="<?php echo $vo['id'];?>"/>
       <input type="button" class="button orange" name="button" id="button" value="查询" onclick="onSearch()" />
       <input type="button" class="button blue" name="button" id="button" value="保存" onclick="onSubmit()" />
       </td>

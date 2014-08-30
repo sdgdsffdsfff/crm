@@ -1,10 +1,112 @@
-<? 
+<?php 
+
+
+/*
+*  操作：添加函数
+*  函数名：checkcustomername()
+*  函数作用：添加客户时验证是否已经有此客户名称
+*  添加时间：2014.7.4
+*  @author 赵兴壮
+*  @param string $name 客户姓名
+*  @return $name_arr['c'] 查询到的客户个数  
+*/
+function checkcustomername_add($name){
+   global $db;
+   $name_arr=$db->getOneRow(get_sql("SELECT count(*) as c FROM {pre}customer WHERE name='" . $name."'"));
+   return $name_arr['c'];
+}
+
+/*
+*  操作：添加函数
+*  函数名：checkcustomertel()
+*  函数作用：添加客户时验证是否已经有此客户联系电话
+*  添加时间：2014.7.4
+*  @author 赵兴壮
+*  @param string  $tel 用户电话
+*  @return int $tel_arr['c'] 查询到的用户个数 
+*/
+function checkcustomertel_add($tel){
+	global $db;
+	$tel_arr=$db->getOneRow(get_sql("SELECT count(*) as c from {pre}customer WHERE tel='".$tel."'"));
+	return $tel_arr['c'];
+}
+
+
+/*
+*  操作：添加函数
+*  函数名：checkcustomername_up()
+*  函数作用：更新客户信息时验证是否已经有此客户名称
+*  添加时间：2014.7.4
+*  @author 赵兴壮
+*  @param int $id 客户id
+*  @param string $name 客户姓名
+*  @return int $name_arr['c'] 查询到的客户个数 
+*/
+function checkcustomername_up($id,$name){
+  	global $db;
+	$name_arr=$db->getOneRow(get_sql("SELECT count(*) as c from {pre}customer WHERE name='".$name."' and id!=".$id));
+	return $name_arr['c'];
+}
+
+/*
+*  操作：添加函数
+*  函数名：checkcustomertel_up()
+*  函数作用：更新客户信息时验证是否已经有此客户联系电话
+*  添加时间：2014.7.4
+*  @author 赵兴壮
+*  @param int $id 客户id
+*  @param string $tel 电话号码
+*  @return int $tel_arr['c'] 查询到的客户个数   
+*/
+function checkcustomertel_up($id,$tel){
+	global $db;
+	$tel_arr=$db->getOneRow(get_sql("SELECT count(*) as c from {pre}customer WHERE tel='".$tel."' and id!=".$id ));
+	return $tel_arr['c'];
+}
+
+
+
+/*
+*  操作：添加函数
+*  函数名：get_transfercusid()
+*  函数作用：客户添加一个月之后状态还是未完成状态则把该客户转换为公海   获取id
+*  添加时间：2014.7 
+  @param  无
+  @author 赵兴壮
+  @return array $id_arr 未完成客户id数组
+*/
+function get_transfercusid(){
+    global $db;
+    $nowtime=date('Y-m-d h:i:s',time()-30*24*60*60);
+	$cu_arr=$db->query(get_sql("SELECT id from {pre}customer where managerid!='' and industry=13 and createtime<'$nowtime'"));
+	$id_arr=array();
+	while($msg = mysql_fetch_array($cu_arr))
+	{
+	  $id_arr[]=$msg['id'];
+	}
+    return $id_arr;
+}
+
+/*
+*  操作：添加函数
+*  函数名：transfercus()
+*  函数作用：把符合公海条件的客户转换为公海  
+*  添加时间：2014.7 
+   @param  array $id_arr  客户id数组
+   @author 赵兴壮
+*/
+function transfercus($id_arr){
+   	global $db;
+	$sql= get_sql( "UPDATE {pre}customer SET managerid='' WHERE id IN (".implode(",",$id_arr).")");
+	$db->query($sql);
+}
 
 function getCustomerCount($industry="1"){
 	global $db;
 	$category_arr = $db->getOneRow(get_sql( "SELECT count(*) as c FROM {pre}customer WHERE managerid='" . $_SESSION['username'] . "' and industry='" . $industry . "'" ));
 	return $category_arr['c']; 
 }
+
 function getCustomerCount2($industry="0",$username,$ismanager="false"){
 	global $db;
 	$username = empty($username) ? $_SESSION['username'] : $username; 
@@ -17,10 +119,12 @@ function getCustomerCount2($industry="0",$username,$ismanager="false"){
 	if($industry!="0" && $industry!=""){
 		$sqlstr  = $sqlstr  . "  and  industry='" . $industry . "' ";
 	}
-	//echo $sqlstr;
+
 	$category_arr = $db->getOneRow(get_sql($sqlstr));	 
 	return $category_arr['c']; 
 }
+
+
 
 function getServicesCount($industry="1",$username,$ismanager="false"){
 	global $db;
@@ -35,6 +139,7 @@ function getServicesCount($industry="1",$username,$ismanager="false"){
 	return $category_arr['c']; 
 }
 
+
 function getCategoryRadio($tablename,$select_id=0,$id = 0,$level = 0){
 	global $db;
 	$category_arr = $db->getList (get_sql( "SELECT * FROM {pre}$tablename WHERE 1=1 order by rank" ));
@@ -48,6 +153,8 @@ function getCategoryRadio($tablename,$select_id=0,$id = 0,$level = 0){
 		//getCategorySelect ($tablename,$select_id, $id, $level );
 	} 
 }
+
+
 //获取下拉菜单类别
 function getCategorySelect($tablename,$select_id=0,$id = 0,$level = 0){
 	global $db;
@@ -66,16 +173,20 @@ function getCategorySelect($tablename,$select_id=0,$id = 0,$level = 0){
 		getCategorySelect ($tablename,$select_id, $id, $level );
 	} 
 }
+
+
 function getCategoryName($typename,$select_id=0,$id = 0,$level = 0){
 	global $db;
 	$category_arr = $db->getOneRow(get_sql( "SELECT * FROM {pre}dic WHERE type = '" . $typename . "' and code='" . $select_id . "'" ));
 	return $category_arr['name']; 
 }
+
 function getCategoryRemark($typename,$select_id=0,$id = 0,$level = 0){
 	global $db;
 	$category_arr = $db->getOneRow(get_sql( "SELECT * FROM {pre}dic WHERE type = '" . $typename . "' and code='" . $select_id . "'" ));
 	return $category_arr['remark']; 
 }
+
 function getCategorySelect2($typename,$select_id=0,$id = 0,$level = 0){
 	global $db;
 	$category_arr = $db->getList (get_sql( "SELECT * FROM {pre}dic WHERE type = '" . $typename . "' order by sort" ));
@@ -162,7 +273,10 @@ function getstyle($tablename,$id,$content){
 
 //获取传递参数
 function getvar($var){
-	$result = isset($_GET[$var])?$_GET[$var]:$_POST[$var];
+       if(isset($_GET[$var]))       
+          $result=$_GET[$var];
+       else   
+       	  $result=$_POST[$var];      
 	$result = addslashes(trim($result));
 	return $result;
 }
@@ -214,7 +328,7 @@ function mpage($sqlstr,$pagesize,$url,$page){
 
 //处理SQL中表名前缀{pre}
 function get_sql($sql_str){
-	$sql_temp = str_replace('{pre}',$GLOBALS[databasePrefix],$sql_str);
+	$sql_temp = str_replace('{pre}',$GLOBALS['databasePrefix'],$sql_str);
 	return $sql_temp;
 }
 //获取栏目深度
@@ -413,4 +527,5 @@ function get_services_row($service,$row,$id){
 	}
 }
 //获取服务里面的服务名，开始时间，结束时间
+
 ?>

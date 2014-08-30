@@ -3,10 +3,11 @@
 session_start();
 require_once "../session.php";
 require_once '../inc/const.php';
+
 $act = $_GET['act'];
 $id =getvar('id');
+//getvar() 函数在function.php170行
 $id = empty($id)?0:$id;
-
 $name 		=getvar('name');
 $addr 		=getvar('addr');
 $httpurl	=getvar('httpurl');
@@ -21,67 +22,116 @@ $rank		=getvar('rank');
 $services=getvar('services');
 $managerId=getvar('managerId');
 $website=getvar('website');
-
-if($act=='add' || $act=='add2'){
-	$record = array(
-		'name'		=>$name,
-		'addr'		=>$addr,
-		'httpurl'	=>$httpurl,
-		'website'   =>$website,
-		'tel'		=>$tel,
-		'mobile'	=>$mobile,
-		'fax'		=>$fax,
-		'email'		=>$email,
-		'qq'		=>$qq,
-		'area'		=>$area,
-		'industry'	=>$industry,
-		'services'	=>$services,
-		'rank'		=>$rank, 
-		'managerid' =>$_SESSION['username'],
-		'msn' =>getvar('msn'),
-		'skype' =>getvar('skype'),
-		'source' =>getvar('source'),
-		'level' =>getvar('level'),
-		'createTime' =>date('Y-m-d h-m-s'),
-		'createUser' =>$_SESSION['username'],
-		'updateTime' =>date('Y-m-d h-m-s'),
-		'dateline'	=>date('Y-m-d h-m-s')
-	);
-	$id = $db->insert($GLOBALS[databasePrefix].'customer',$record);
-	if($act=='add'){
-		echo "<script type='text/javascript' charset='utf-8'>alert('添加成功!');window.location='customer_action.php?act=mod&id=".$id."';</script>";
-	}else{
-		echo "<script type='text/javascript' charset='utf-8'>alert('手机添加成功!');window.location='mcustomer_add.php?act=mod2&id=".$id."';</script>";
+if($act=='add' || $act=='add2'){   
+	/*
+	*  操作：修改
+	*  作用：验证联系电话商户名称是否已经存在
+	*  修改时间：2014.7.4
+	*  修改人：赵兴壮
+	*  修改行：39-89行
+	*/
+	
+	if (empty($name)){
+	   echo "<script type='text/javascript' charset='utf-8'>alert('客户名称不能为空!');history.go(-1)</script>";
+	   exit();
 	}
+
+    $checknamestatus=checkcustomername_add($name);
+    if($checknamestatus==0){
+    	$checktelstatus=checkcustomertel_add($tel);
+    	if($checktelstatus==0){
+    	 $record = array(
+			'name'		=>$name,
+			'addr'		=>$addr,
+			'httpurl'	=>$httpurl,
+			'website'   =>$website,
+			'tel'		=>$tel,
+			'mobile'	=>$mobile,
+			'fax'		=>$fax,
+			'email'		=>$email,
+			'qq'		=>$qq,
+			'area'		=>$area,
+			'industry'	=>$industry,
+			'services'	=>$services,
+			'rank'		=>$rank, 
+			'managerid' =>$_SESSION['username'],
+			'msn' =>getvar('msn'),
+			'skype' =>getvar('skype'),
+			'source' =>getvar('source'),
+			'level' =>getvar('level'),
+			'createTime' =>date('Y-m-d h-m-s'),
+			'createUser' =>$_SESSION['username'],
+			'updateTime' =>date('Y-m-d h-m-s'),
+			'dateline'	=>date('Y-m-d h-m-s')
+			);
+			$id = $db->insert($GLOBALS[databasePrefix].'customer',$record);	
+			if($act=='add'){
+				echo "<script type='text/javascript' charset='utf-8'>alert('添加成功!');window.location='customer_action.php?act=mod&id=".$id."';</script>";
+			}else{
+				echo "<script type='text/javascript' charset='utf-8'>alert('手机添加成功!');window.location='mcustomer_add.php?act=mod2&id=".$id."';</script>";
+			}
+    	}
+    	else{
+    	    echo "<script type='text/javascript' charset='utf-8'>alert('此客户电话已存在!');history.back(-1)</script>";
+    	}
+    }
+    else{
+            echo "<script type='text/javascript' charset='utf-8'>alert('此客户名称已存在!');history.back(-1)</script>";
+    }
 }
 
 if ($act=='mod'||$act=='mod2'){
-	$record = array(
-		'name'		=>$name,
-		'addr'		=>$addr,
-		'website'   =>$website,
-		'httpurl'	=>$httpurl,
-		'tel'		=>$tel,
-		'mobile'	=>$mobile,
-		'fax'		=>$fax,
-		'email'		=>$email,
-		'qq'		=>$qq,
-		'area'		=>$area,
-		'industry'	=>$industry,
-		'services'	=>$services, 
-		'rank'		=>$rank,
-		'msn' =>getvar('msn'),
-		'skype' =>getvar('skype'),
-		'source' =>getvar('source'),
-		'level' =>getvar('level'), 
-		'updateTime' =>date('Y-m-d h-m-s'),
-		'dateline'	=>date('Y-m-d h-m-s')
-	);
-	$db->update($GLOBALS[databasePrefix].'customer',$record,'id='.$id);
-	if($act=='mod' ){
-		echo "<script type='text/javascript' charset='utf-8'>alert('修改成功!".$temp_fwnr."');window.location='customer_action.php?act=mod&id=".$id."';</script>";
+   /*
+	*  操作：修改
+	*  作用：更新数据时验证联系电话商户名称是否已经存在
+	*  修改时间：2014.7.4
+	*  修改人：赵兴壮
+	*  修改：98-147行
+	*/
+
+    if (empty($name)){
+	   echo "<script type='text/javascript' charset='utf-8'>alert('客户名称不能为空!');history.go(-1)</script>";
+	   exit();
+	}
+
+	$checknamestatus=checkcustomername_up($id,$name);
+	if($checknamestatus==0){
+	      $checktelstatus=checkcustomertel_up($id,$tel);
+		  if($checktelstatus==0)
+		   {
+	   			$record = array(
+					'name'		=>$name,
+					'addr'		=>$addr,
+					'website'   =>$website,
+					'httpurl'	=>$httpurl,
+					'tel'		=>$tel,
+					'mobile'	=>$mobile,
+					'fax'		=>$fax,
+					'email'		=>$email,
+					'qq'		=>$qq,
+					'area'		=>$area,
+					'industry'	=>$industry,
+					'services'	=>$services, 
+					'rank'		=>$rank,
+					'msn' =>getvar('msn'),
+					'skype' =>getvar('skype'),
+					'source' =>getvar('source'),
+					'level' =>getvar('level'), 
+					'updateTime' =>date('Y-m-d h-m-s'),
+					'dateline'	=>date('Y-m-d h-m-s')
+				);
+				$db->update($GLOBALS[databasePrefix].'customer',$record,'id='.$id);
+				if($act=='mod' ){
+					echo "<script type='text/javascript' charset='utf-8'>alert('修改成功!".$temp_fwnr."');window.location='customer_action.php?act=mod&id=".$id."';</script>";
+				}else{
+					echo "<script type='text/javascript' charset='utf-8'>alert('手机修改成功!".$temp_fwnr."');window.location='mcustomer_add.php?act=mod2&id=".$id."';</script>";
+				}  
+		   }else{
+		   	   echo "<script type='text/javascript' charset='utf-8'>alert('此客户电话已存在!');history.back(-1)</script>"; 
+		   }
 	}else{
-		echo "<script type='text/javascript' charset='utf-8'>alert('手机修改成功!".$temp_fwnr."');window.location='mcustomer_add.php?act=mod2&id=".$id."';</script>";
+		//跳转位置;
+		echo "<script type='text/javascript' charset='utf-8'>alert('此客户名称已存在!');history.back(-1)</script>"; 
 	}
 }
 
@@ -152,6 +202,7 @@ if ($act=='delService' || $act=="delService2"){
 		echo "<script type='text/javascript' charset='utf-8'>window.location='customer_action.php?tab=1&act=mod&id=".getvar("id")."';</script>";
 	}
 }  
+
 //新增联系小记
 if ($act=='addService' || $act=='addService2') {
 	if(is_uploaded_file($_FILES['upfile']['tmp_name'])){ 
@@ -165,8 +216,6 @@ if ($act=='addService' || $act=='addService2') {
 		//把上传的临时文件移动到up目录下面 
 		$destination=time().".".$type['extension'];
 		move_uploaded_file($tmp_name,'../files/'.$destination);
-		
-		 
 	}
 	$record = array(
 		'type'		=>getvar("type"),

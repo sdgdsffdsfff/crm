@@ -11,12 +11,12 @@ session_start();
 <script src="../js/jquery-1.5.js" type="text/javascript"></script>
 </head>
 <body style="padding:10px;">  
+
 <?php 
 require_once '../session.php';
 require_once '../inc/const.php';
 $page 			= $_GET ['page'] ? $_GET ['page'] : 1;
 $page_size 		= 20;
-
 $sqlstr="select distinct a.* from {pre}customer a left join {pre}person b on a.id=b.cid where 1=1 ";
 $industry = getvar('industry');
 $managerid = getvar('managerid'); 
@@ -28,7 +28,6 @@ if(!empty($industry)){
 	$sqlstr=$sqlstr." and industry=".$industry;
 }
 
-
 if($managerid=='public'){
 	$sqlstr=$sqlstr." and managerid=''";
 }elseif($managerid=='my'){
@@ -37,7 +36,6 @@ if($managerid=='public'){
 	$sqlstr=$sqlstr." and managerid in ('" . $username ."'" . getsubmanager($userId) . ")";
 	//$sqlstr=$sqlstr." and managerid='" . $username . "'";
 }
-
 
 $queryname=getvar(queryname);
 if(!empty($queryname) && $queryname!="可以输入客户|联系人名称、地址、电话和手机或电子邮件来查询"){
@@ -52,12 +50,11 @@ $level =getvar("level");
 if(!empty($level)){
 	$sqlstr=$sqlstr." and (a.level='".$level."')";
 } 
+
 $area =getvar("area");
 if(!empty($area)){
 	$sqlstr=$sqlstr." and (a.area='".$area."')";
 }  
-
-
 
 $sqlstr=$sqlstr." order by id desc";
 $sqlstr = get_sql($sqlstr);
@@ -93,7 +90,8 @@ $total_nums = $db->getRowsNum ( $sqlstr );
         <option value="">选择状态</option>
         <?php getCategorySelect("industry",$industry); ?>
       </select> 
-      <input tyep="hidden" name="managerid" value="<?php echo $managerid?>"/>
+      <input tyep="hidden"
+ name="managerid" value="<?php echo $managerid; ?>"/>
 			</div>
      	</td>
   </tr> 
@@ -108,7 +106,7 @@ $total_nums = $db->getRowsNum ( $sqlstr );
     <td width="12%" align="center" valign="middle">电话<br>手机</td>    
     <td width="12%" align="center" valign="middle">最近跟进<br />跟进日期</td>
     <td width="10%" align="center" valign="middle">修改日期<br>负责人</td>
-    <td   align="center" valign="middle"><?php if($industry=='4'){ echo '金额';} else {echo '首次需求';}?></td> 
+    <td   align="center" valign="middle"><?php if($industry=='4'){ echo '金额';} else {echo '首次需求';} ?></td> 
     <td width="4%" height="24" align="center" valign="middle">操作</td>
   </tr> 
   </thead>
@@ -124,11 +122,11 @@ $total_nums = $db->getRowsNum ( $sqlstr );
     <td height="24" align="left" valign="middle"><?php echo getLastServices($list['id']);?></td>
     <td height="24" align="left" valign="middle"><?php echo  date('Y-m-d',strtotime($list['dateline'])) ?><br><?=empty($list['managerid'])?"公海":getRealnamebyName($list['managerid']);?></td>
     <td width="15%" height="24" align="left" valign="middle">&nbsp;<?php if($industry=='4'){ echo $list['rank'];} else {
-	echo "<a href='customer_action.php?act=mod&id=".$list['id']."&tab=0' title='".$list['services']."'>".utf_substr($list['services'],20)."</a>";}?></td> 
-    <td height="24" align="center" valign="middle">&nbsp;<a href="customer_action.php?act=mod&id=<?php echo $list['id'];?>&page=<?php echo $page;?>"><img src="../images/edit.gif" border="0" /></a> 
+	echo "<a href='customer_action.php?act=mod&id=".$list['id']."&tab=0' title='".$list['services']."'>".utf_substr($list['services'],20)."</a>";} ?></td> 
+    <td height="24" align="center" valign="middle">&nbsp;<a href="customer_action.php?act=mod&id=<?php echo $list['id'];?>&page=<?php echo $page; ?>"><img src="../images/edit.gif" border="0" /></a> 
 	<?php if($_SESSION['supermanager']<6){?>
 	<a href="customer_ok.php?id=<?php echo $list['id']; ?>&act=del" onClick="javascript:return confirm('确实要删除吗?')"><img src="../images/del.gif" border="0" /></a>
-	<? } ?>
+	<?php } ?>
 	</td>
   </tr>
   <?php		 
@@ -151,7 +149,8 @@ $total_nums = $db->getRowsNum ( $sqlstr );
 			foreach ($s_list as $vo){	
      ?>
    <tr><td>
-    <a href="./customer_list.php?industry=<?php echo $industry;?>&username=<?php echo $vo['username'];?>"><?php echo $vo['usermenu'];?></a>
+    <a href="./customer_list.php?industry=<?php echo $industry;?>&username=<?php echo $vo['username'];?>">
+    <?php echo $vo['usermenu'];?></a>
    </td><td>
     <span class="tips"><?php echo getCustomerCount2($industry,$vo['username'],"true");?></span>
    </td></tr>
@@ -159,8 +158,6 @@ $total_nums = $db->getRowsNum ( $sqlstr );
 		  	}
 		  ?>
 </table>
-	    
-					  
- 					
+
 </body>
 </html> 

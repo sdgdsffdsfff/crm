@@ -10,11 +10,24 @@ if(isset($_SESSION['username'])){
 }else{
 	$username="";
 }
-$finput=empty($username)?"username":"password";
 
+
+$finput=empty($username)?"username":"password";
 if (isset($_GET['act']) && addslashes($_GET['act']) == "login") login();
 if (isset($_GET['act']) && addslashes($_GET['act']) == "quit") quit();
 function login() {
+
+/*
+*  操作：添加
+*  作用：当客户添加一个月之后状态还是未成交客户则把该用户转换为公海客户
+*  添加时间：2014.7.4
+*  添加人：赵兴壮
+*  添加行：12行
+*/
+  $id_data=get_transfercusid();
+  if (!empty($id_data)) {
+        transfercus($id_data);
+  }
 	global $db;
 	if($_GET['auto']=="t" || $_POST['code']==$_SESSION["codeNumber"]){	 
 	 if (isset ( $_POST ["username"] )) {
@@ -42,7 +55,7 @@ function login() {
 		}
 		$user_row = $db->getOneRow(get_sql("select username,password,id,supermanager from {pre}manager where username='".$username."' and password='".md5($password)."'"));
 
-		if (!empty($user_row )) {
+		if (!empty($user_row )){
 			$_SESSION['username'] = $user_row ['username']; 
 			$_SESSION['password'] = $user_row ['password']; 
 			$_SESSION['id'] = $user_row['id']; 
@@ -60,7 +73,6 @@ function login() {
 		}else{
 			echo "<script>alert('用户名或密码不正确！');location='/login.php';</script>";
 		}
-	
 	}
 }
 
@@ -71,6 +83,7 @@ function quit() {
 	setcookie("password", "",time());
 	//echo '<script>location="login.php";</script>';
 }
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

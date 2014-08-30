@@ -52,7 +52,7 @@ function rolechange(roleid){
 	//	document.all.managerdiv.style.display="none";
 	//}
 }
-rolechange(<?=$list['supermanager']?>)
+rolechange(<?php echo $list['supermanager'];?>)
 </script>
  
 <link href="../css/admin_css.css" rel="stylesheet" type="text/css" />
@@ -61,17 +61,17 @@ rolechange(<?=$list['supermanager']?>)
 <body>
 <table width="98%" height="101" border="0" cellpadding="3" cellspacing="1" bgcolor="#CCCCCC" style="margin:0 auto;padding-top:10px;">
   <form name="myform" action="admin_ok.php?act=add" method="post" onSubmit="return checkreg();">
-    <input name="id" type="hidden" id="id" value="<?=$id?>" />
+    <input name="id" type="hidden" id="id" value="<?php echo $id;?>" />
     <tr>
       <td height="22" colspan="2" bgcolor="#555555"><font color="#FFFFFF">&nbsp;<strong>管理员添加</strong></font></td>
     </tr>
     <tr>
       <td width="13%" height="24" align="right" valign="middle" bgcolor="#f8f8f8">用户名：</td>
-      <td width="87%" height="24" align="left" valign="middle" bgcolor="#f8f8f8"><input name="username" type="text" id="username" size="50" value="<?=$list['username']?>" /></td>
+      <td width="87%" height="24" align="left" valign="middle" bgcolor="#f8f8f8"><input name="username" type="text" id="username" size="50" value="<?php echo $list['username'];?>" /></td>
     </tr>
      <tr>
       <td width="13%" height="24" align="right" valign="middle" bgcolor="#f8f8f8">姓名：</td>
-      <td width="87%" height="24" align="left" valign="middle" bgcolor="#f8f8f8"><input name="usermenu" type="text" id="usermenu" size="50" value="<?=$list['usermenu']?>" /></td>
+      <td width="87%" height="24" align="left" valign="middle" bgcolor="#f8f8f8"><input name="usermenu" type="text" id="usermenu" size="50" value="<?php echo $list['usermenu'];?>" /></td>
     </tr>
     <tr>
       <td width="13%" height="24" align="right" valign="middle" bgcolor="#f8f8f8">请输入密码：</td>
@@ -121,7 +121,7 @@ rolechange(<?=$list['supermanager']?>)
   </form>
 </table>
 <script>
-rolechange(<?=$list['supermanager']?>)
+rolechange(<?php echo $list['supermanager']?>)
 </script>
 </body>
 </html>

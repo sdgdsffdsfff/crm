@@ -4,7 +4,8 @@ require_once 'HttpClient.class.php';
 require_once 'mailClass.php'; 
 require_once 'smsClass.php';
 
-if($_POST["act"]=="短信"){
+if($_POST["act"]
+=="短信"){
 	print(dlswSdk::sendSms( '18962557155', '5eb4925587b90b951cf4e271b9f2767e',$_POST["content"].'【旗云科技】',$_POST["target"]));
 }elseif($_POST['act']=="邮件"){
 
@@ -26,7 +27,8 @@ $smtp->sendmail($smtpemailto, $smtpusermail, $mailsubject, $mailbody, $mailtype)
 
 
 }
-$act=$_GET["act"]; 
+$act=$_GET["act"];
+ 
 $actionName = empty($act)?"短信":"邮件";
 $targetName = empty($act)?"输入手机号码":"输入邮箱地址";
 ?> 

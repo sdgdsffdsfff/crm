@@ -107,9 +107,7 @@ $act = empty($act) ? "add" : $act;
 		</form>
 </div>
 <?php 
-
-	mysql_query(get_sql("update {pre}customer set viewcount=IF(ISNULL(viewcount),0,viewcount) + 1 where id=".$id));
-	
+	mysql_query(get_sql("update {pre}customer set viewcount=IF(ISNULL(viewcount),0,viewcount) + 1 where id=".$id));	
 	//$db->update($GLOBALS[databasePrefix].'customer',$record,'id='.$id);
 	$sql = get_sql("select * from {pre}customer where id=".$id." order by id");
 	$list = $db->getonerow($sql);
@@ -131,7 +129,8 @@ $act = empty($act) ? "add" : $act;
   <form name="myform1" method="post" action="customer_ok.php" onSubmit="return checksubmit();">
     <tr>
       <td width="13%" height="24" align="right" valign="middle" bgcolor="#f1f1f1"><span class="l_col">名称：</span></td>
-      <td width="87%" height="24" colspan="3" align="left" valign="middle" bgcolor="#f1f1f1" nowrap="nowrap"><input name="name" type="text" id="name" size="50" value="<?php echo $list['name']?>" />
+      <td width="87%" height="24" colspan="3" align="left" valign="middle" bgcolor="#f1f1f1" nowrap="nowrap">
+         <input name="name" type="text" id="name" size="50" value="<?php echo $list['name']?>" />
       	<?php if($list['managerid']!=""){
       			echo "负责人：".getRealnamebyName($list['managerid']);
       		}?>
@@ -142,7 +141,7 @@ $act = empty($act) ? "add" : $act;
       <td height="24" colspan="3" align="left" valign="middle" bgcolor="#f1f1f1"><input name="addr" type="text" id="addr" size="50" value="<?php echo $list['addr']?>" />
         <?php
 		if(!empty($list['viewcount'] )){       
-       echo "查看次数：".$list['viewcount']; 
+          echo "查看次数：".$list['viewcount']; 
 	   }
         ?>
       </td>
@@ -226,7 +225,7 @@ $act = empty($act) ? "add" : $act;
     <tr>
       <td height="24" colspan="4" ><div align="center">
         <input type="hidden" value="<?php echo $list['id'];?>" name="id" id="id">
-        <input type="button" class="button blue"  name="modbtn" id="modbtn" value="保存" onClick="change_submit('<?=$act?>')" />
+        <input type="button" class="button blue"  name="modbtn" id="modbtn" value="保存" onClick="change_submit('<?php echo $act;?>')" />
         <?php if($list['id']==""){ //新增客户?>    
          	<input type="button" class="button orange"name="modbtn" id="modbtn" value="公海客户"  titile="设置成公海客户" onClick="change_submit('public')" /> 
         <?}else{
@@ -240,9 +239,10 @@ $act = empty($act) ? "add" : $act;
          <?php }else{ //自己客户 
          ?>
          		<input type="button" class="button orange"name="modbtn" id="modbtn" value="公海客户" titile="设置成公海客户" onClick="change_submit('public')" /> 
-         <?php }
+         <?php 
          
-         }//修改客户?>    
+         }//修改客户
+         ?>    
         <input type="button" class="button" name="back" id="back" value="返回" onClick="javascript:window.history.go(-1);" />
       </div></td>
     </tr>

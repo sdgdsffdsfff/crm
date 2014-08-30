@@ -45,7 +45,7 @@ $list = $db->getOneRow(get_sql("select * from {pre}manager where id = " . $id));
 ?>
   <form name="myform" action="admin_ok.php?act=mod" method="POST" onSubmit="return checkreg();">
     <tr>
-      <td height="24" colspan="2" bgcolor="#555555"><font color="#FFFFFF">&nbsp;<strong>管理员修改</strong></font></td>
+      <td height="24" colspan="2" bgcolor="#555555"><font color="#FFFFFF">&nbsp;<strong>管理员密码修改</strong></font></td>
     </tr>
     <tr>
       <td width="13%" height="24" align="right" valign="middle" bgcolor="#f8f8f8">用户名：</td>

@@ -6,39 +6,44 @@
  * http://www.luocms.com<br />
  ****************************************/
 
+
 /**
  * MYSQL 公用类库
  * @author Jerryluo
  * @version 1.0
  */
+
+
+
 class db_mysql {
 	/**
 	 * $debug=true打开数据库调试模式<br />
 	 * $debug=true关闭数据库调试模式<br />
-	 *
 	 * @var boolean
 	 */
 	public $debug = true;
 	private $version = "";
 	private $link_id = NULL;
-	/**
+	/*
 	 * 构造函数
 	 *
 	 */
 	function __construct() {
 		$this->debug = false;
 	}
+
+
 	/**
 	 * 连接数据库
-	 *
-	 * param  string  $dbhost		数据库主机名<br />
-	 * param  string  $dbuser		数据库用户名<br />
-	 * param  string  $dbpw			数据库密码<br />
-	 * param  string  $dbname		数据库名称<br />
+	 * param  string  $dbhost		数据库主机名<br/>
+	 * param  string  $dbuser		数据库用户名<br/>
+	 * param  string  $dbpw			数据库密码<br/>
+	 * param  string  $dbname		数据库名称<br/>
 	 * param  string  $dbcharset	数据库字符集<br />
 	 * param  string  $pconnect		持久链接,1为开启,0为关闭
 	 * return bool
 	 **/
+
 	function connect($dbhost, $dbuser, $dbpwd, $dbname = '', $dbcharset = 'utf8', $pconnect = 0) {
 		if ($pconnect) {
 			if (! $this->link_id = mysql_pconnect ( $dbhost, $dbuser, $dbpwd )) {
@@ -64,12 +69,15 @@ class db_mysql {
 		}
 		mysql_query("set names utf8;");
 	}
+
+
 	/**
 	 * 发送一条 MySQL 查询
 	 *
 	 * @param string $sql
 	 * @return bool
 	 */
+	
 	function query($sql) {
 		if ($this->debug) echo "<hr>" . $sql . "<hr>";//如果设置成调试模式，将打印SQL语句
 		if (! ($query = mysql_query ( $sql, $this->link_id ))) {
@@ -79,6 +87,8 @@ class db_mysql {
 			return $query;
 		}
 	}
+
+
 	/**
 	 * 插入数据
 	 *
@@ -86,6 +96,8 @@ class db_mysql {
 	 * @param array $field_values	数据数组<br />
 	 * @return id					最后插入ID
 	 */
+	
+
 	function insert($table, $field_values) {
 		$field_names = $this->getCol ( 'DESC ' . $table );
 		$fields = array ();
@@ -96,9 +108,11 @@ class db_mysql {
 				$values [] = "'" . $field_values [$value] . "'";
 			}
 		}
-		if (! empty ( $fields )) {
+
+		if (!empty ( $fields )) {
 			$sql = 'INSERT INTO ' . $table . ' (' . implode ( ', ', $fields ) . ') VALUES (' . implode ( ', ', $values ) . ')';
 		}
+
 		if ($sql) {
 			//$sql = $this->escape($sql);
 			//echo $sql."<BR>";
@@ -107,15 +121,14 @@ class db_mysql {
 			return $this->getInsertId ();
 		} else {
 			return false;
-		}
+		}		
 	}
 	/*最后插入ID*/
 	function getInsertId() {
 		return mysql_insert_id ( $this->link_id );
 	}
-	/**
+	/*
 	 * 更新数据
-	 *
 	 * @param string $table			要更新的表<br />
 	 * @param array $field_values	要更新的数据，使用而为数据例:array('列表1'=>'数值1','列表2'=>'数值2')
 	 * @return bool	
@@ -141,7 +154,6 @@ class db_mysql {
 	
 	/**
 	 * 删除数据
-	 *
 	 * @param string $table	要删除的表<br />
 	 * @param string $where	删除条件，默认删除整个表
 	 * @return bool
@@ -158,6 +170,7 @@ class db_mysql {
 			return false;
 		}
 	}
+	
 	/**
 	 * 获取数据列表
 	 *
@@ -268,6 +281,5 @@ class db_mysql {
 		}
 		exit ();
 	}
-	
 }
 ?>
